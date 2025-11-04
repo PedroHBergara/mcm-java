@@ -12,29 +12,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
-@EnableWebSecurity
 public class ConfiguracoesSeguranca {
 
-
-
     @Bean
-    public SecurityFilterChain filtroSeguranca (HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(req -> {
-                        req.requestMatchers("/css/**", "/js/**", "/assets/**").permitAll();
-                        req.anyRequest().authenticated();
-                    })
-                .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/")
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll())
-                .rememberMe(rememberMe -> rememberMe.key("lembrar de mim")
-                        .alwaysRemember(true)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Desativa proteção CSRF (necessário para POSTs via Postman)
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // Libera todos os endpoints
                 )
-                .csrf(Customizer.withDefaults())
-                .build();
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(form -> form.disable());
+
+        return http.build();
     }
 }
