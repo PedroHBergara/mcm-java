@@ -1,16 +1,23 @@
-FROM eclipse-temurin:21-jdk-alpine AS builder
+# Stage 1: build
+FROM maven:3.9.3-eclipse-temurin-21 AS builder
 WORKDIR /build
-RUN apk add --no-cache bash
-COPY build.gradle settings.gradle ./
-COPY gradle/ ./gradle/
-COPY gradlew ./
-RUN chmod +x ./gradlew
-RUN ./gradlew dependencies --no-daemon --quiet
-COPY ./src ./src
-RUN ./gradlew build --no-daemon -x test --quiet
 
+# Copia arquivos do Maven
+COPY pom.xml ./
+COPY src ./src
+
+# Build do projeto (skip testes se quiser)
+RUN mvn clean package -DskipTests
+
+# Stage 2: runtime
 FROM amazoncorretto:21-alpine3.21
 WORKDIR /app
-COPY --from=builder /build/build/libs/*-SNAPSHOT.jar app.jar
+
+# Copia o jar gerado pelo Maven
+COPY --from=builder /build/target/*.jar app.jar
+
+# Porta do Spring Boot
 EXPOSE 8080
+
+# Executa a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
