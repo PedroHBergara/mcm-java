@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM maven:3.8.8-jdk-17 AS builder
+FROM maven:3.8.4-openjdk-17 AS builder  # tag confirmada existente
 WORKDIR /build
 
 COPY pom.xml ./
