@@ -16,14 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class ConfiguracoesSeguranca {
 
-    @Bean
-    public UserDetailsService dadosUsuarioCadastrados() {
-        UserDetails usuario = User.builder()
-                .username("administrador")
-                .password("{noop}mcm2025")
-                .build();
-        return new InMemoryUserDetailsManager(usuario);
-    }
+
 
     @Bean
     public SecurityFilterChain filtroSeguranca (HttpSecurity http) throws Exception {

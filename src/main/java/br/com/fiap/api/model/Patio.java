@@ -45,4 +45,8 @@ public class Patio {
     public br.com.fiap.api.model.Filial getFilial() {
         return filial;
     }
+
+    public void setFilial(br.com.fiap.api.model.Filial filial) {
+        this.filial = filial;
+    }
 }
